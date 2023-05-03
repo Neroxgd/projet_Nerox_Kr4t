@@ -2,19 +2,29 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //ce script gère les mouvements de base des personnages, donc déplacement et jump
-public class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour
 {
-    private Vector2 direction;
-    public float puissanceJump = 1;
-    public float AccelerationSpeedCharacter = 1;
-    public float maxSpeedCharacter = 20;
-    public float airControlSpeed = 0.2f;
-    public float gravityPower = -9.81f;
-    [SerializeField] private Rigidbody2D rigidBody2D;
+    protected Vector2 direction;
+    private float puissanceJump;
+    private float AccelerationSpeedCharacter;
+    protected float maxSpeedCharacter;
+    private float airControlSpeed;
+    private float gravityPower;
+    protected Rigidbody2D rigidBody2D;
     private bool IsGrounded { get { return Physics2D.Raycast(transform.position + Vector3.down, Vector2.down, 0.1f); } }
     private bool[] IsOnWall { get { return direction.x == 0 ? new bool[] { false, false } : new bool[] { Physics2D.Raycast(transform.position + new Vector3(direction.x, 0, 0), new Vector2(direction.x, 0), 0.05f), Physics2D.Raycast(transform.position + new Vector3(-direction.x, 0, 0), new Vector2(-direction.x, 0), 0.05f) }; } }
     private bool IsOnWalls { get { return IsOnWall[0] || IsOnWall[1]; } }
-    
+
+    void Start()
+    {
+        rigidBody2D = GetComponent<Rigidbody2D>();
+        puissanceJump = 20;
+        AccelerationSpeedCharacter = 5;
+        maxSpeedCharacter = 10;
+        airControlSpeed = 0.2f;
+        gravityPower = -1;
+    }
+
     public void GetInputsDeplacement(InputAction.CallbackContext context)
     {
         direction = context.ReadValue<Vector2>();

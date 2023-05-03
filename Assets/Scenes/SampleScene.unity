@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 139668982}
   - component: {fileID: 139668981}
   - component: {fileID: 139668984}
-  - component: {fileID: 139668983}
+  - component: {fileID: 139668985}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -230,7 +230,7 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: 1fa94f6da4d18494d882e523e58d3dfb, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &139668982
 BoxCollider2D:
@@ -258,24 +258,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &139668983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139668978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b57ba2be4fe81684190efd7108e9bbef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  puissanceJump: 20
-  AccelerationSpeedCharacter: 5
-  maxSpeedCharacter: 10
-  airControlSpeed: 0.2
-  gravityPower: -1
-  rigidBody2D: {fileID: 139668981}
 --- !u!114 &139668984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,8 +284,32 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 27dacd79-92c6-4efb-8e38-0c56991d6b45
+    m_ActionName: Character/Deplacement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5e18974a-7265-463f-98c8-e3c469b39d2f
+    m_ActionName: Character/Jump[/Keyboard/space]
+  - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 139668983}
+      - m_Target: {fileID: 139668985}
+        m_TargetAssemblyTypeName: Squid, Assembly-CSharp
+        m_MethodName: Dash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b0cbb4d9-25de-4492-9647-aa9f2d061db3
+    m_ActionName: Character Squid/Dash[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 139668985}
         m_TargetAssemblyTypeName: Character, Assembly-CSharp
         m_MethodName: GetInputsDeplacement
         m_Mode: 0
@@ -315,11 +321,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 27dacd79-92c6-4efb-8e38-0c56991d6b45
-    m_ActionName: Character/Deplacement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+    m_ActionId: 6736c18a-446c-4629-8193-418465190908
+    m_ActionName: Character Squid/Deplacement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 139668983}
+      - m_Target: {fileID: 139668985}
         m_TargetAssemblyTypeName: Character, Assembly-CSharp
         m_MethodName: Jump
         m_Mode: 0
@@ -331,13 +337,28 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 5e18974a-7265-463f-98c8-e3c469b39d2f
-    m_ActionName: Character/Jump[/Keyboard/space]
+    m_ActionId: 1ee97f54-86c9-4db7-9ab5-0be0412c4316
+    m_ActionName: Character Squid/Jump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Character
+  m_DefaultActionMap: Character Squid
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &139668985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139668978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fb197872e456104b85723774b6cff9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashForce: 30
+  easeDash: 21
+  timeToRechargeDash: 3
 --- !u!1 &206453623
 GameObject:
   m_ObjectHideFlags: 0
@@ -1201,7 +1222,7 @@ Transform:
   m_GameObject: {fileID: 1768648897}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.07, y: -3.22, z: 0}
-  m_LocalScale: {x: 28.0395, y: 1, z: 1}
+  m_LocalScale: {x: 72.55221, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
