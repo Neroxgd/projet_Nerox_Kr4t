@@ -12,7 +12,7 @@ public abstract class Character : MonoBehaviour
     private float gravityPower;
     protected Rigidbody2D rigidBody2D;
     private bool IsGrounded { get { return Physics2D.Raycast(transform.position + Vector3.down, Vector2.down, 0.1f); } }
-    private bool[] IsOnWall { get { return direction.x == 0 ? new bool[] { false, false } : new bool[] { Physics2D.Raycast(transform.position + new Vector3(direction.x, 0, 0), new Vector2(direction.x, 0), 0.05f), Physics2D.Raycast(transform.position + new Vector3(-direction.x, 0, 0), new Vector2(-direction.x, 0), 0.05f) }; } }
+    private bool[] IsOnWall { get { return new bool[] { Physics2D.Raycast(transform.position + Vector3.right, Vector2.right, 0.05f), Physics2D.Raycast(transform.position + Vector3.left, Vector2.left, 0.05f) }; } }
     private bool IsOnWalls { get { return IsOnWall[0] || IsOnWall[1]; } }
 
     void Start()
@@ -45,7 +45,12 @@ public abstract class Character : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started && (IsGrounded || IsOnWalls))
-            rigidBody2D.AddForce((IsOnWalls ? IsOnWall[0] ? (Vector2.up + new Vector2(-direction.x, 0)).normalized : (Vector2.up + new Vector2(direction.x, 0)).normalized : Vector2.up) * puissanceJump, ForceMode2D.Impulse);
+        if (context.started && IsGrounded)
+            rigidBody2D.AddForce(Vector2.up * puissanceJump, ForceMode2D.Impulse);
+        else if (context.started && IsOnWalls)
+        {
+            rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, rigidBody2D.velocity.y / 2);
+            rigidBody2D.AddForce((IsOnWall[0] ? new Vector2(-1, 1).normalized : new Vector2(1, 1).normalized) * puissanceJump, ForceMode2D.Impulse);
+        }
     }
 }
