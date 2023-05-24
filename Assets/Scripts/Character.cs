@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using Photon.Pun;
+using Cinemachine;
 
 //ce script gère les mouvements de base des personnages, donc déplacement et jump
 public abstract class Character : MonoBehaviour
@@ -11,8 +12,9 @@ public abstract class Character : MonoBehaviour
     protected bool canUseAbility = true;
     protected SpriteRenderer spriteRenderer;
     protected Rigidbody2D rigidBody2D;
-    private float puissanceJump;
     protected PhotonView photonView;
+    private CinemachineVirtualCamera virtualCamera;
+    private float puissanceJump;
     private float AccelerationSpeedCharacter;
     private float airControlSpeed;
     private float gravityPower;
@@ -42,6 +44,7 @@ public abstract class Character : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         rigidBody2D = GetComponent<Rigidbody2D>();
         photonView = GetComponent<PhotonView>();
+        virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
         puissanceJump = 20;
         AccelerationSpeedCharacter = 5;
         maxSpeedCharacter = 10;
@@ -50,6 +53,13 @@ public abstract class Character : MonoBehaviour
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject obj in gameObjects)
             Physics2D.IgnoreCollision(obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        if (!photonView.IsMine)
+        {
+            GetComponentInChildren<Camera>().enabled = false;
+            virtualCamera.enabled = false;
+        }
+        else
+            virtualCamera.Follow = transform;
     }
 
     public void GetInputsDeplacement(InputAction.CallbackContext context)
