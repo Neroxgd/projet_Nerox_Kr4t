@@ -18,7 +18,7 @@ public class Denis : Character
 
     public void Invisible(InputAction.CallbackContext context)
     {
-        if (!context.started) return;
+        if (!context.started || !photonView.IsMine) return;
         if (isVisible && canUseAbility)
         {
             spriteRenderer.DOFade(0, 1);

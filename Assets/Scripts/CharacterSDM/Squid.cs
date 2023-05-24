@@ -9,7 +9,7 @@ public class Squid : Character
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (!context.started || direction == Vector2.zero || !canUseAbility) return;
+        if (!context.started || direction == Vector2.zero || !canUseAbility || !photonView.IsMine) return;
         rigidBody2D.velocity = Vector2.zero;
         rigidBody2D.AddForce(direction * dashForce, ForceMode2D.Impulse);
         float baseSpeedCharacter = maxSpeedCharacter;
