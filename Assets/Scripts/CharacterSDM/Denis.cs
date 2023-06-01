@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class Denis : Character
 {
@@ -13,15 +14,20 @@ public class Denis : Character
     {
         base.Start();
         isVisible = true;
-
     }
 
-    public void Invisible(InputAction.CallbackContext context)
+    public void InputInvisible(InputAction.CallbackContext context)
     {
-        if (!context.started || !photonView.IsMine) return;
+        if (!context.started) return;
+        photonView.RPC("InvisibleOther", RpcTarget.OthersBuffered);
+        InvisibleMine();
+    }
+
+    private void InvisibleMine()
+    {
         if (isVisible && canUseAbility)
         {
-            spriteRenderer.DOFade(0, 1);
+            spriteRenderer.DOFade(0.5f, 1);
             InvisibleBarre();
             isVisible = false;
             spriteRenderer.DOFade(1, 1)
@@ -33,6 +39,27 @@ public class Denis : Character
         else if (!isVisible)
         {
             InvisibleBarre();
+            spriteRenderer.DOFade(1, 1);
+            isVisible = true;
+            DOTween.Kill("TweenInvisibleTime");
+        }
+    }
+
+    [PunRPC]
+    private void InvisibleOther()
+    {
+        if (isVisible && canUseAbility)
+        {
+            spriteRenderer.DOFade(0, 1);
+            isVisible = false;
+            spriteRenderer.DOFade(1, 1)
+            .SetDelay(invisibleTime)
+            .SetId("TweenInvisibleTime")
+            .OnComplete(() => isVisible = true);
+            StartCoroutine(TimeToRechargeAbility());
+        }
+        else if (!isVisible)
+        {
             spriteRenderer.DOFade(1, 1);
             isVisible = true;
             DOTween.Kill("TweenInvisibleTime");

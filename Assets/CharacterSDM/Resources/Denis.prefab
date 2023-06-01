@@ -352,7 +352,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3473850373708814002}
         m_TargetAssemblyTypeName: Denis, Assembly-CSharp
-        m_MethodName: Invisible
+        m_MethodName: InputInvisible
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

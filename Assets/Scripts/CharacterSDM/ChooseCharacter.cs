@@ -1,23 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class ChooseCharacter : MonoBehaviour
 {
     public static int IndexCharacter { get; private set; }
-    public TextMeshProUGUI text;
+    [SerializeField] private Sprite[] playerSprite;
+    [SerializeField] private Image spriteCharacter;
 
     void Start()
     {
-        text.text = IndexCharacter.ToString();
+        spriteCharacter.sprite = playerSprite[IndexCharacter];
     }
 
     public void SetIndexCharacter(bool substract)
     {
         if (!substract)
+        {
             IndexCharacter++;
+            if (IndexCharacter > playerSprite.Length - 1)
+                IndexCharacter = 0;
+        }
         else
+        {
             IndexCharacter--;
-        text.text = IndexCharacter.ToString();    }
+            if (IndexCharacter < 0)
+                IndexCharacter = playerSprite.Length - 1;
+        }
+        spriteCharacter.sprite = playerSprite[IndexCharacter];
+    }
 }

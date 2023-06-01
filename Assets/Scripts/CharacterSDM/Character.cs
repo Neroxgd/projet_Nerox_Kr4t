@@ -57,6 +57,8 @@ public abstract class Character : MonoBehaviour
         {
             GetComponentInChildren<Camera>().enabled = false;
             virtualCamera.enabled = false;
+            GetComponentInChildren<AudioListener>().enabled = false;
+            GetComponent<PlayerInput>().enabled = false;
         }
         else
             virtualCamera.Follow = transform;
@@ -64,12 +66,15 @@ public abstract class Character : MonoBehaviour
 
     public void GetInputsDeplacement(InputAction.CallbackContext context)
     {
-        if (!photonView.IsMine)
-            return;
         direction = context.ReadValue<Vector2>();
     }
 
-    private void FixedUpdate()
+    private void Update()
+    {
+
+    }
+
+    void FixedUpdate()
     {
         if (!photonView.IsMine)
             return;
@@ -78,35 +83,20 @@ public abstract class Character : MonoBehaviour
 
     private void Deplacements()
     {
-        rigidBody2D.velocity += new Vector2(
-            (IsGrounded ? direction.x : direction.x * airControlSpeed) * AccelerationSpeedCharacter,
-            IsOnWalls ? gravityPower / 2 : gravityPower
-        );
-        rigidBody2D.velocity = new Vector2(
-            Mathf.Clamp(rigidBody2D.velocity.x, -maxSpeedCharacter, maxSpeedCharacter),
-            rigidBody2D.velocity.y
-        );
+        rigidBody2D.velocity += new Vector2((IsGrounded ? direction.x : direction.x * airControlSpeed) * AccelerationSpeedCharacter, IsOnWalls ? gravityPower / 2 : gravityPower);
+        rigidBody2D.velocity = new Vector2(Mathf.Clamp(rigidBody2D.velocity.x, -maxSpeedCharacter, maxSpeedCharacter), rigidBody2D.velocity.y);
         if (IsGrounded && direction.x == 0)
-            rigidBody2D.velocity = new Vector2(
-                Mathf.Lerp(rigidBody2D.velocity.x, 0, 0.25f),
-                rigidBody2D.velocity.y
-            );
+            rigidBody2D.velocity = new Vector2(Mathf.Lerp(rigidBody2D.velocity.x, 0, 0.25f), rigidBody2D.velocity.y);
     }
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (!photonView.IsMine)
-            return;
         if (context.started && IsGrounded)
             rigidBody2D.AddForce(Vector2.up * puissanceJump, ForceMode2D.Impulse);
         else if (context.started && IsOnWalls)
         {
             rigidBody2D.velocity = new Vector2(rigidBody2D.velocity.x, rigidBody2D.velocity.y / 2);
-            rigidBody2D.AddForce(
-                (IsOnWall[0] ? new Vector2(-1, 1).normalized : new Vector2(1, 1).normalized)
-                    * puissanceJump,
-                ForceMode2D.Impulse
-            );
+            rigidBody2D.AddForce((IsOnWall[0] ? new Vector2(-1, 1).normalized : new Vector2(1, 1).normalized) * puissanceJump, ForceMode2D.Impulse);
         }
     }
 
@@ -115,5 +105,12 @@ public abstract class Character : MonoBehaviour
         canUseAbility = false;
         yield return new WaitForSeconds(timeToRechargeAbility);
         canUseAbility = true;
+    }
+
+    private bool CheckObjectTag(RaycastHit2D raycastHit2D, string tag)
+    {
+        if (raycastHit2D.transform.CompareTag(tag))
+            return true;
+        return false;
     }
 }
